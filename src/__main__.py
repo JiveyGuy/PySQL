@@ -104,7 +104,7 @@ def do_sql( state_db_path,
 	debug("execute done")
 
 # ==== global settings
-# ctk.set_appearance_mode("dark")
+ctk.set_appearance_mode("dark")
 ctk.set_widget_scaling(1.2)
 
 # the deafult output dir (or make dir)
@@ -137,7 +137,8 @@ class App(ctk.CTk):
 			pady=(2, 2),
 			sticky="nsew")
 
-		self.exe_button = ctk.CTkButton(master=self, # fg_color="transparent",
+		self.exe_button = ctk.CTkButton(master=self,
+			fg_color="transparent",
 			border_width=2,
 			text="Exec+Output",
 			text_color=("gray10", "#DCE4EE"),
@@ -165,7 +166,8 @@ class App(ctk.CTk):
 	def make_top_bar(self):
 		self.progressbar = ctk.CTkProgressBar(self,
 			mode = "indeterminate",
-			width=940, # progress_color="grey",
+			width=940,
+			progress_color="grey",
 			height=20)
 		self.progressbar.grid(row=0,
 			column=1,
@@ -255,7 +257,7 @@ class App(ctk.CTk):
 		global current_file_paths
 		# restart progress
 		self.progressbar.stop() #todo animate decrease
-		# self.progressbar.configure(progress_color="grey")
+		self.progressbar.configure(progress_color="grey")
 		# getting download dir path 
 		start_path = get_os_download_dir() + "/"
 		debug(f"file_button_callback, start_path = {start_path}")
@@ -277,19 +279,19 @@ class App(ctk.CTk):
 	def execute_button_callback(self):
 		global current_file_paths
 		self.progressbar.start() # start progress
-		# self.progressbar.configure(progress_color="blue")
+		self.progressbar.configure(progress_color="blue")
 		try:
 			cmd_str = self.sql_command_box.get("1.0","end")
 			debug(f"sql_cmd = {cmd_str}")
 			debug(f"execute_button_callback do_sql({current_file_paths})")
 			state = do_sql(current_file_paths, self.progressbar, cmd_str)
 			# todo error handling
-			# if state == 0 :
-				# self.progressbar.configure(progress_color="green")
-			# elif state == 1 :
-				# self.progressbar.configure(progress_color="yellow")
+			if state == 0 :
+				self.progressbar.configure(progress_color="green")
+			elif state == 1 :
+				self.progressbar.configure(progress_color="yellow")
 		except Exception as e:
-			# self.progressbar.configure(progress_color="red")
+			self.progressbar.configure(progress_color="red")
 			err(f"Failed to execute due to:\n{str(e)}")
 
 
