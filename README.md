@@ -7,6 +7,14 @@
 # PySQL
 A python program made with CustomTkInter for the USDA-FIA so that state.db files can have sql commands ran on them. 
 
+TODO:
+* Fix missing TODOS
+* Make Nuitka for:
+* * linux
+* * windows
+* test windows
+* add line numbers and SQL parsing
+
 ## Installation
 COMING SOON
 

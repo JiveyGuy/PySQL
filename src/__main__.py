@@ -56,7 +56,7 @@ def working_dir():
 
 def default_output():
 	# TODO add windows version
-	path = os.getcwd()+"../output/"
+	path = os.getcwd()+"/./output/"
 	if not os.path.exists(path):
 		debug("output not defined making dir")
 		os.makedirs(path)
@@ -80,28 +80,39 @@ def load_cursor(state_db_path):
 	cursor = conn.cursor()
 	return (cursor, conn)
 
-def do_sql( state_db_path,
+def get_file_name(input_path):
+	file_name = input_path.rsplit('/',1)[-1]
+	debug(f"get_file_name({input_path}) -> {file_name}")
+	return file_name
+
+def do_sql( state_db_paths,
 	progress,
-	cmd_str,
-	output_file = DEFAULT_OUT_PATH ):
-	debug("do_sql")
+	merge_sep,
+	cmd_str ):
+
+	debug("do_sql started")
 	progress.set(0)
-	(cursor, conn) = load_cursor(state_db_path)
-	progress.set(0.25)
-	debug(f"load_cursor returned {(cursor, conn)}")
-	cursor.execute(cmd_str)
-	progress.set(0.50)
-	with open(output_file, 'w', newline='') as csv_file:
-		progress.set(0.60) 
-		csv_writer = csv.writer(csv_file)
-		progress.set(0.70)
-		csv_writer.writerow([i[0] for i in cursor.description])
-		progress.set(0.80) 
-		csv_writer.writerows(cursor)
-		progress.set(0.90)
-	conn.close()
-	progress.set(1)
-	debug("execute done")
+	try:
+		if merge_sep == False: #merge
+			debug("undeifned merge call") #TODO
+		else: #seperate
+			for state_db_path in state_db_paths:
+				debug("do_sql now on state_db_path ")
+				output_file = default_output()+get_file_name(state_db_path).rsplit('.',1)[0]+".csv"
+				debug(f"do_sql({state_db_path}) outputting to {output_file}")
+				(cursor, conn) = load_cursor(state_db_path)
+				debug(f"load_cursor returned {(cursor, conn)}")
+				cursor.execute(cmd_str)
+				with open(output_file, 'w', newline='') as csv_file:
+					csv_writer = csv.writer(csv_file)
+					csv_writer.writerow([i[0] for i in cursor.description])
+					csv_writer.writerows(cursor)
+				conn.close()
+				debug("execute done")
+		return 0
+	except Exception as e:
+		err(f"{e}")
+		return 1
 
 # ==== global settings
 ctk.set_appearance_mode("dark")
@@ -214,10 +225,24 @@ class App(ctk.CTk):
 
 		self.make_or_reset_scroll_list()
 		
+		self.merge_sw = ctk.CTkSwitch( self.sidebar_frame,
+			text=f"multi-behavior: seperate",
+			onvalue="seperate",
+			offvalue="merge",
+			command = self.merge_sw_callback)
+		self.merge_sw.grid(row=4,
+			column=0,
+			padx=20,
+			pady=10)
+		self.merge_sw.select()
+
+	def merge_sw_callback(self):
+			self.merge_sw.configure(text=f"multi-behavior: {self.merge_sw.get()}")
+
 	def make_or_reset_scroll_list(self):
 		# create scrollable frame
 		self.scrollable_frame = ctk.CTkScrollableFrame(self.sidebar_frame,
-			label_text="Select Files")
+			label_text="Selected Files")
 		self.scrollable_frame.grid(row=3,
 			column=0,
 			padx=(20, 20),
@@ -238,11 +263,10 @@ class App(ctk.CTk):
 		self.title("PySQL")
 		self.geometry(f"{1100}x{580}")
 		# self.set_proc_name("PySQL")
-		ico_path = working_dir() + "/src/PySQL.jpg"
+		ico_path = working_dir() + "/src/logo.png"
 		debug(f"ico_path = {ico_path}")
 		img = ImageTk.PhotoImage(Image.open(ico_path))  # PIL solution
 		self.tk.call('wm', 'iconphoto', self._w, img)
-		
 
 		# configure grid layout (4x3) (rowxcol)
 		self.grid_columnconfigure(1, weight=1)
@@ -273,21 +297,31 @@ class App(ctk.CTk):
 		# add selected files to scroll-frame
 		for i, filepath in enumerate(current_file_paths):
 			label = ctk.CTkLabel(master=self.scrollable_frame,
-				text = ".../"+filepath.rsplit('/',1)[-1] )
+				text = f"{i+1}: "+get_file_name(filepath) )
 			label.grid(row=i, column=0, padx=10, pady=(0, 20))
 
 	def execute_button_callback(self):
 		global current_file_paths
+		try: current_file_paths
+		except NameError as ne:
+			err("Invalid file(s)!")
+			return -1
+		# check file status
+		debug(f"type(current_file_paths)={type(current_file_paths)}")
+
 		self.progressbar.start() # start progress
 		self.progressbar.configure(progress_color="blue")
 		try:
 			cmd_str = self.sql_command_box.get("1.0","end")
 			debug(f"sql_cmd = {cmd_str}")
 			debug(f"execute_button_callback do_sql({current_file_paths})")
-			state = do_sql(current_file_paths, self.progressbar, cmd_str)
+			val_tmp = self.merge_sw.get()
+			debug(f"self.merge_sw.get() return {val_tmp}")
+			state = do_sql(current_file_paths, self.progressbar, val_tmp=="seperate", cmd_str)
 			# todo error handling
 			if state == 0 :
 				self.progressbar.configure(progress_color="green")
+				succ("SQL ran and exported!")
 			elif state == 1 :
 				self.progressbar.configure(progress_color="yellow")
 		except Exception as e:
