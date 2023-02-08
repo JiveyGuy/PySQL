@@ -2,15 +2,34 @@ import csv
 import sqlite3
 import platform
 import os
+from tkinter import messagebox as msg_bx
 
-# globals 
+# ==== globals 
 DEBUG = True
 DEFAULT_OUT_PATH = "output.csv"
 
-# funcs
+# ==== funcs
 def debug(msg):
 	if DEBUG:
 		print(f"DEBUG:: {msg}")
+
+def err(msg):
+	msg_bx.showerror(title="Errrrrr :(", message=msg)
+
+def succ(msg):
+	msg_bx.showinfo(title="Succc :)", message=msg)
+
+def working_dir():
+	return os.getcwd()
+
+def default_output():
+	# TODO add windows version
+	path = os.getcwd()+"/output/"
+	if not os.path.exists(path):
+		debug("output not defined making dir")
+		os.makedirs(path)
+	return path
+
 
 # from: https://stackoverflow.com/a/48706260
 def get_os_download_dir():
