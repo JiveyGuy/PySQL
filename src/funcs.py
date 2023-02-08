@@ -24,7 +24,7 @@ def working_dir():
 
 def default_output():
 	# TODO add windows version
-	path = os.getcwd()+"/output/"
+	path = os.getcwd()+"../output/"
 	if not os.path.exists(path):
 		debug("output not defined making dir")
 		os.makedirs(path)
