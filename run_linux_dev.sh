@@ -1,2 +1,4 @@
 #!/bin/bash
-python3.10 ./src/__main__.py
+cd src
+python3.10 __main__.py
+cd ..
