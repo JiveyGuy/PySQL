@@ -55,7 +55,6 @@ def working_dir():
 	return os.getcwd()
 
 def default_output():
-	# TODO add windows version
 	path = os.getcwd()+"/./output/"
 	if not os.path.exists(path):
 		debug("output not defined making dir")
@@ -85,7 +84,8 @@ def get_file_name(input_path):
 	debug(f"get_file_name({input_path}) -> {file_name}")
 	return file_name
 
-def do_sql( state_db_paths,
+def do_sql( entry_select,
+	state_db_paths,
 	progress,
 	merge_sep,
 	cmd_str ):
@@ -93,8 +93,24 @@ def do_sql( state_db_paths,
 	debug("do_sql started")
 	progress.set(0)
 	try:
+		custom_out_dir = self.entry()
 		if merge_sep == False: #merge
-			debug("undeifned merge call") #TODO
+			debug("undeifned merge call")
+			# mkdir temp
+			os.mkdir("./output/temp")
+			for state_db_path in state_db_paths:
+				debug("do_sql now on state_db_path ")
+				output_file = default_output()+get_file_name(state_db_path).rsplit('.',1)[0]+".csv"
+				debug(f"do_sql({state_db_path}) outputting to {output_file}")
+				(cursor, conn) = load_cursor(state_db_path)
+				debug(f"load_cursor returned {(cursor, conn)}")
+				cursor.execute(cmd_str)
+				with open(output_file, 'w', newline='') as csv_file:
+					csv_writer = csv.writer(csv_file)
+					csv_writer.writerow([i[0] for i in cursor.description])
+					csv_writer.writerows(cursor)
+				conn.close()
+				debug("execute done")
 		else: #seperate
 			for state_db_path in state_db_paths:
 				debug("do_sql now on state_db_path ")
@@ -326,7 +342,7 @@ class App(ctk.CTk):
 			debug(f"execute_button_callback do_sql({current_file_paths})")
 			val_tmp = self.merge_sw.get()
 			debug(f"self.merge_sw.get() return {val_tmp}")
-			state = do_sql(current_file_paths, self.progressbar, val_tmp=="seperate", cmd_str)
+			state = do_sql(self.entry_select.get(), current_file_paths, self.progressbar, val_tmp=="seperate", cmd_str)
 			# todo error handling
 			if state == 0 :
 				self.progressbar.configure(progress_color="green")

@@ -14,9 +14,6 @@ TODO:
 * test windows
 * add line numbers and SQL parsing
 
-## Installation
-COMING SOON
-
 ## Use
 ![](github_media/example_GUI.png)
 | _What version 0.0.1 looks like_
