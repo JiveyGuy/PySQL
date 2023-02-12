@@ -263,19 +263,19 @@ class App(ctk.CTk):
 		self.title("PySQL")
 		self.geometry(f"{1100}x{580}")
 		# self.set_proc_name("PySQL")
-		ico_path = "./logo.png"
-		ico_path2 = "src/logo.png"
+		# ico_path = "./logo.png"
+		# ico_path2 = "src/logo.png"
 		
-		try: 
-			debug(f"ico_path = {ico_path}, current dir = {os.getcwd()}")
-			img = ImageTk.PhotoImage(Image.open(ico_path))  # PIL solution
-		except:
+		# try: 
+		# 	debug(f"ico_path = {ico_path}, current dir = {os.getcwd()}")
+		# 	img = ImageTk.PhotoImage(Image.open(ico_path))  # PIL solution
+		# except:
 
-			tmp_path = os.path.join(os.path.dirname(__file__), f"{ico_path2}")
-			debug(f"retry for dist: ico_path = {ico_path2}, current dir = {tmp_path}")
-			img_tmp = open(tmp_path)
-			img = ImageTk.PhotoImage(img_tmp)  # PIL solution
-		self.tk.call('wm', 'iconphoto', self._w, img)
+		# 	tmp_path = os.path.join(os.path.dirname(__file__), f"{ico_path2}")
+		# 	debug(f"retry for dist: ico_path = {ico_path2}, current dir = {tmp_path}")
+		# 	img_tmp = open(tmp_path)
+		# 	img = ImageTk.PhotoImage(img_tmp)  # PIL solution
+		# self.tk.call('wm', 'iconphoto', self._w, img)
 
 		# configure grid layout (4x3) (rowxcol)
 		self.grid_columnconfigure(1, weight=1)
