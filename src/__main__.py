@@ -19,15 +19,20 @@
 
 # ==== standard imports
 import csv
+import requests
 import sqlite3
 import platform
 import os
+import glob
+import pandas as pd
 import customtkinter as ctk
 import webbrowser
 import tkinter as tk
 from tkinter import filedialog as file_diag
 from tkinter import messagebox as msg_bx
 from PIL import ImageTk, Image
+
+
 
 # ==== globals 
 DEBUG = True
@@ -84,24 +89,34 @@ def get_file_name(input_path):
 	debug(f"get_file_name({input_path}) -> {file_name}")
 	return file_name
 
+def gen_output_prefix(entry_select):
+	if not os.path.exists(entry_select):
+		err(f"Output Path: {entry_select}, does not exist! outputting to ./output.")
+		return "./output"
+	else : return entry_select
+
 def do_sql( entry_select,
 	state_db_paths,
 	progress,
 	merge_sep,
 	cmd_str ):
-
 	debug("do_sql started")
+	output_prefix = gen_output_prefix(entry_select)
+
+	debug(f"output prefix = {output_prefix}")
 	progress.set(0)
 	try:
-		custom_out_dir = self.entry()
 		if merge_sep == False: #merge
-			debug("undeifned merge call")
 			# mkdir temp
-			os.mkdir("./output/temp")
+			output_prefix += "/temp"
+			os.mkdir(output_prefix)
+			debug("made temp dir")
+
+			# for each file
 			for state_db_path in state_db_paths:
 				debug("do_sql now on state_db_path ")
-				output_file = default_output()+get_file_name(state_db_path).rsplit('.',1)[0]+".csv"
-				debug(f"do_sql({state_db_path}) outputting to {output_file}")
+				output_file_prefix = default_output()+get_file_name(state_db_path).rsplit('.',1)[0]+".csv"
+				debug(f"do_sql({state_db_path}) outputting to {output_file_prefix}")
 				(cursor, conn) = load_cursor(state_db_path)
 				debug(f"load_cursor returned {(cursor, conn)}")
 				cursor.execute(cmd_str)
@@ -111,6 +126,16 @@ def do_sql( entry_select,
 					csv_writer.writerows(cursor)
 				conn.close()
 				debug("execute done")
+
+			# merge .csvs
+			extension = 'csv'
+			all_filenames = [i for i in glob.glob('output_prefix/*.{}'.format(extension))]
+			debug(f"all file names = {all_filenames}")
+			combined_csv = pd.concat([pd.read_csv(f) for f in all_filenames ])
+			combined_csv.to_csv( "combined_csv.csv", index=False, encoding='utf-8-sig')
+
+			os.rmdir("./temp/")
+
 		else: #seperate
 			for state_db_path in state_db_paths:
 				debug("do_sql now on state_db_path ")
@@ -298,10 +323,6 @@ class App(ctk.CTk):
 		self.grid_rowconfigure((0, 1, 2), weight=1)
 
 	# ==== util funcs 
-	def open_data_mart(self):
-		webbrowser.open(DATAMART_URL,
-			new=1)
-
 	def file_button_callback(self):
 		global current_file_paths
 		# restart progress
@@ -342,7 +363,7 @@ class App(ctk.CTk):
 			debug(f"execute_button_callback do_sql({current_file_paths})")
 			val_tmp = self.merge_sw.get()
 			debug(f"self.merge_sw.get() return {val_tmp}")
-			state = do_sql(self.entry_select.get(), current_file_paths, self.progressbar, val_tmp=="seperate", cmd_str)
+			state = do_sql(val_tmp, current_file_paths, self.progressbar, val_tmp=="seperate", cmd_str)
 			# todo error handling
 			if state == 0 :
 				self.progressbar.configure(progress_color="green")

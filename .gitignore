@@ -129,6 +129,7 @@ dmypy.json
 .pyre/
 
 # custom jivey addition
-dist/
+*dist/*
 output/
 out.xml
+*src.build/*
