@@ -1,0 +1,118 @@
+[2023-02-13T20:06:27.812317 2983240] === CCACHE 4.5.1 STARTED =========================================
+[2023-02-13T20:06:27.812317 2983240] Config: (default) absolute_paths_in_stderr = false
+[2023-02-13T20:06:27.812317 2983240] Config: (default) base_dir = 
+[2023-02-13T20:06:27.812317 2983240] Config: (environment) cache_dir = /home/jivey/.cache/Nuitka/ccache
+[2023-02-13T20:06:27.812317 2983240] Config: (default) compiler = 
+[2023-02-13T20:06:27.812317 2983240] Config: (default) compiler_check = mtime
+[2023-02-13T20:06:27.812317 2983240] Config: (default) compiler_type = auto
+[2023-02-13T20:06:27.812317 2983240] Config: (default) compression = true
+[2023-02-13T20:06:27.812317 2983240] Config: (default) compression_level = 0
+[2023-02-13T20:06:27.812317 2983240] Config: (default) cpp_extension = 
+[2023-02-13T20:06:27.812317 2983240] Config: (default) debug = false
+[2023-02-13T20:06:27.812317 2983240] Config: (default) debug_dir = 
+[2023-02-13T20:06:27.812317 2983240] Config: (default) depend_mode = false
+[2023-02-13T20:06:27.812317 2983240] Config: (default) direct_mode = true
+[2023-02-13T20:06:27.812317 2983240] Config: (default) disable = false
+[2023-02-13T20:06:27.812317 2983240] Config: (default) extra_files_to_hash = 
+[2023-02-13T20:06:27.812317 2983240] Config: (default) file_clone = false
+[2023-02-13T20:06:27.812317 2983240] Config: (default) hard_link = false
+[2023-02-13T20:06:27.812317 2983240] Config: (default) hash_dir = true
+[2023-02-13T20:06:27.812317 2983240] Config: (default) ignore_headers_in_manifest = 
+[2023-02-13T20:06:27.812317 2983240] Config: (default) ignore_options = 
+[2023-02-13T20:06:27.812317 2983240] Config: (default) inode_cache = false
+[2023-02-13T20:06:27.812317 2983240] Config: (default) keep_comments_cpp = false
+[2023-02-13T20:06:27.812317 2983240] Config: (default) limit_multiple = 0.8
+[2023-02-13T20:06:27.812317 2983240] Config: (environment) log_file = /home/jivey/Devel/PySQL/build/dist/src.onefile-build/ccache-2983170.txt
+[2023-02-13T20:06:27.812317 2983240] Config: (default) max_files = 0
+[2023-02-13T20:06:27.812317 2983240] Config: (default) max_size = 5.0G
+[2023-02-13T20:06:27.812317 2983240] Config: (default) namespace = 
+[2023-02-13T20:06:27.812317 2983240] Config: (default) path = 
+[2023-02-13T20:06:27.812317 2983240] Config: (default) pch_external_checksum = false
+[2023-02-13T20:06:27.812317 2983240] Config: (default) prefix_command = 
+[2023-02-13T20:06:27.812317 2983240] Config: (default) prefix_command_cpp = 
+[2023-02-13T20:06:27.812317 2983240] Config: (default) read_only = false
+[2023-02-13T20:06:27.812317 2983240] Config: (default) read_only_direct = false
+[2023-02-13T20:06:27.812317 2983240] Config: (default) recache = false
+[2023-02-13T20:06:27.812317 2983240] Config: (default) reshare = false
+[2023-02-13T20:06:27.812317 2983240] Config: (default) run_second_cpp = true
+[2023-02-13T20:06:27.812317 2983240] Config: (default) secondary_storage = 
+[2023-02-13T20:06:27.812317 2983240] Config: (environment) sloppiness = include_file_mtime, include_file_ctime
+[2023-02-13T20:06:27.812317 2983240] Config: (default) stats = true
+[2023-02-13T20:06:27.812317 2983240] Config: (default) stats_log = 
+[2023-02-13T20:06:27.812317 2983240] Config: (default) temporary_dir = /run/user/1000/ccache-tmp
+[2023-02-13T20:06:27.812317 2983240] Config: (default) umask = 
+[2023-02-13T20:06:27.812566 2983240] Command line: gcc -o static_src/OnefileBootstrap.o -c -std=c11 -fvisibility=hidden -fwrapv -pipe -fpartial-inlining -ftrack-macro-expansion=0 -Wno-deprecated-declarations -fno-var-tracking -Wno-misleading-indentation -fcompare-debug-second -O3 -fPIC -D__NUITKA_NO_ASSERT__ -D_NUITKA_ONEFILE_MODE -I. -I/home/jivey/.local/lib/python3.10/site-packages/nuitka/build/include -I/home/jivey/.local/lib/python3.10/site-packages/nuitka/build/static_src -I/home/jivey/.local/lib/python3.10/site-packages/nuitka/build/inline_copy/zstd static_src/OnefileBootstrap.c
+[2023-02-13T20:06:27.812574 2983240] Hostname: jiveypc.nmsu.edu
+[2023-02-13T20:06:27.812578 2983240] Working directory: /home/jivey/Devel/PySQL/build/dist/src.onefile-build
+[2023-02-13T20:06:27.812585 2983240] Compiler type: gcc
+[2023-02-13T20:06:27.812626 2983240] Source file: static_src/OnefileBootstrap.c
+[2023-02-13T20:06:27.812631 2983240] Object file: static_src/OnefileBootstrap.o
+[2023-02-13T20:06:27.812641 2983240] Trying direct lookup
+[2023-02-13T20:06:27.812693 2983240] Retrieved 5f38kutmv54eidcv8kceimrn9st17u19s from primary storage (/home/jivey/.cache/Nuitka/ccache/5/f/38kutmv54eidcv8kceimrn9st17u19sM)
+[2023-02-13T20:06:27.812701 2983240] Looking for result key in /home/jivey/.cache/Nuitka/ccache/5/f/38kutmv54eidcv8kceimrn9st17u19sM
+[2023-02-13T20:06:27.814251 2983240] Got result key from manifest
+[2023-02-13T20:06:27.814263 2983240] Retrieved 9240gg1qgjpt1no35mmorqbjt435k7bps from primary storage (/home/jivey/.cache/Nuitka/ccache/9/2/40gg1qgjpt1no35mmorqbjt435k7bpsR)
+[2023-02-13T20:06:27.814271 2983240] Reading result /home/jivey/.cache/Nuitka/ccache/9/2/40gg1qgjpt1no35mmorqbjt435k7bpsR
+[2023-02-13T20:06:27.814443 2983240] Reading embedded entry #0 .o (179392 bytes)
+[2023-02-13T20:06:27.814449 2983240] Writing to static_src/OnefileBootstrap.o
+[2023-02-13T20:06:27.814583 2983240] Succeeded getting cached result
+[2023-02-13T20:06:27.814590 2983240] Result: direct_cache_hit
+[2023-02-13T20:06:27.814593 2983240] Result: primary_storage_hit
+[2023-02-13T20:06:27.814641 2983240] Acquired lock /home/jivey/.cache/Nuitka/ccache/4/8/stats.lock
+[2023-02-13T20:06:27.814754 2983240] Releasing lock /home/jivey/.cache/Nuitka/ccache/4/8/stats.lock
+[2023-02-13T20:06:27.814787 2983240] Unlink /home/jivey/.cache/Nuitka/ccache/4/8/stats.lock
+[2023-02-13T20:06:27.819630 2983242] === CCACHE 4.5.1 STARTED =========================================
+[2023-02-13T20:06:27.819630 2983242] Config: (default) absolute_paths_in_stderr = false
+[2023-02-13T20:06:27.819630 2983242] Config: (default) base_dir = 
+[2023-02-13T20:06:27.819630 2983242] Config: (environment) cache_dir = /home/jivey/.cache/Nuitka/ccache
+[2023-02-13T20:06:27.819630 2983242] Config: (default) compiler = 
+[2023-02-13T20:06:27.819630 2983242] Config: (default) compiler_check = mtime
+[2023-02-13T20:06:27.819630 2983242] Config: (default) compiler_type = auto
+[2023-02-13T20:06:27.819630 2983242] Config: (default) compression = true
+[2023-02-13T20:06:27.819630 2983242] Config: (default) compression_level = 0
+[2023-02-13T20:06:27.819630 2983242] Config: (default) cpp_extension = 
+[2023-02-13T20:06:27.819630 2983242] Config: (default) debug = false
+[2023-02-13T20:06:27.819630 2983242] Config: (default) debug_dir = 
+[2023-02-13T20:06:27.819630 2983242] Config: (default) depend_mode = false
+[2023-02-13T20:06:27.819630 2983242] Config: (default) direct_mode = true
+[2023-02-13T20:06:27.819630 2983242] Config: (default) disable = false
+[2023-02-13T20:06:27.819630 2983242] Config: (default) extra_files_to_hash = 
+[2023-02-13T20:06:27.819630 2983242] Config: (default) file_clone = false
+[2023-02-13T20:06:27.819630 2983242] Config: (default) hard_link = false
+[2023-02-13T20:06:27.819630 2983242] Config: (default) hash_dir = true
+[2023-02-13T20:06:27.819630 2983242] Config: (default) ignore_headers_in_manifest = 
+[2023-02-13T20:06:27.819630 2983242] Config: (default) ignore_options = 
+[2023-02-13T20:06:27.819630 2983242] Config: (default) inode_cache = false
+[2023-02-13T20:06:27.819630 2983242] Config: (default) keep_comments_cpp = false
+[2023-02-13T20:06:27.819630 2983242] Config: (default) limit_multiple = 0.8
+[2023-02-13T20:06:27.819630 2983242] Config: (environment) log_file = /home/jivey/Devel/PySQL/build/dist/src.onefile-build/ccache-2983170.txt
+[2023-02-13T20:06:27.819630 2983242] Config: (default) max_files = 0
+[2023-02-13T20:06:27.819630 2983242] Config: (default) max_size = 5.0G
+[2023-02-13T20:06:27.819630 2983242] Config: (default) namespace = 
+[2023-02-13T20:06:27.819630 2983242] Config: (default) path = 
+[2023-02-13T20:06:27.819630 2983242] Config: (default) pch_external_checksum = false
+[2023-02-13T20:06:27.819630 2983242] Config: (default) prefix_command = 
+[2023-02-13T20:06:27.819630 2983242] Config: (default) prefix_command_cpp = 
+[2023-02-13T20:06:27.819630 2983242] Config: (default) read_only = false
+[2023-02-13T20:06:27.819630 2983242] Config: (default) read_only_direct = false
+[2023-02-13T20:06:27.819630 2983242] Config: (default) recache = false
+[2023-02-13T20:06:27.819630 2983242] Config: (default) reshare = false
+[2023-02-13T20:06:27.819630 2983242] Config: (default) run_second_cpp = true
+[2023-02-13T20:06:27.819630 2983242] Config: (default) secondary_storage = 
+[2023-02-13T20:06:27.819630 2983242] Config: (environment) sloppiness = include_file_mtime, include_file_ctime
+[2023-02-13T20:06:27.819630 2983242] Config: (default) stats = true
+[2023-02-13T20:06:27.819630 2983242] Config: (default) stats_log = 
+[2023-02-13T20:06:27.819630 2983242] Config: (default) temporary_dir = /run/user/1000/ccache-tmp
+[2023-02-13T20:06:27.819630 2983242] Config: (default) umask = 
+[2023-02-13T20:06:27.819685 2983242] Command line: gcc -o /home/jivey/Devel/PySQL/build/dist/src.bin -s -z noexecstack @./@link_input.txt
+[2023-02-13T20:06:27.819696 2983242] Hostname: jiveypc.nmsu.edu
+[2023-02-13T20:06:27.819700 2983242] Working directory: /home/jivey/Devel/PySQL/build/dist/src.onefile-build
+[2023-02-13T20:06:27.819703 2983242] Compiler type: gcc
+[2023-02-13T20:06:27.819715 2983242] noexecstack is not a regular file, not considering as input file
+[2023-02-13T20:06:27.819732 2983242] No -c option found
+[2023-02-13T20:06:27.819736 2983242] Failed; falling back to running the real compiler
+[2023-02-13T20:06:27.819739 2983242] Executing /usr/bin/gcc -o /home/jivey/Devel/PySQL/build/dist/src.bin -s -z noexecstack @./@link_input.txt
+[2023-02-13T20:06:27.819743 2983242] Result: called_for_link
+[2023-02-13T20:06:27.819785 2983242] Acquired lock /home/jivey/.cache/Nuitka/ccache/4/a/stats.lock
+[2023-02-13T20:06:27.819869 2983242] Releasing lock /home/jivey/.cache/Nuitka/ccache/4/a/stats.lock
+[2023-02-13T20:06:27.819888 2983242] Unlink /home/jivey/.cache/Nuitka/ccache/4/a/stats.lock
