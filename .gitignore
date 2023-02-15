@@ -130,4 +130,5 @@ dmypy.json
 *dist/*
 output/
 out.xml
+build/dist/
 *src.build/*
