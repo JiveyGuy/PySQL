@@ -110,7 +110,10 @@ def do_sql( entry_select,
 			try:
 				os.rmdir(output_prefix)
 			except:
-				shutil.rmtree(output_prefix)
+				try:
+					shutil.rmtree(output_prefix)
+				except:
+					pass
 			os.mkdir(output_prefix)
 			debug("made temp dir")
 
@@ -402,6 +405,7 @@ class App(ctk.CTk):
 			label.grid(row=i, column=0, padx=10, pady=(0, 20))
 
 	def execute_button_callback(self):
+		self.progressbar.start() # start progress
 		global current_file_paths
 		try: current_file_paths
 		except NameError as ne:
@@ -410,7 +414,7 @@ class App(ctk.CTk):
 		# check file status
 		debug(f"type(current_file_paths)={type(current_file_paths)}")
 
-		self.progressbar.start() # start progress
+		
 		self.progressbar.configure(progress_color="blue")
 		try:
 			cmd_str = self.sql_command_box.get("1.0","end")
