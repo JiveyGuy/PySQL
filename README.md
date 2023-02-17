@@ -3,18 +3,15 @@
     <img src="./github_media/logo.png">
   </picture>
 </p>
-
 # PySQL
 A python program made with CustomTkInter for the USDA-FIA so that state.db files can have sql commands ran on them. 
 
-TODO:
-* Fix missing TODOS* Make Nuitka for:
-* * linux
-* * windows
-* test windows
-* add line numbers and SQL parsing
+# Use
+Download from [here](release/PySQL.exe) and run the file. Once you export a folder will appear called "output" with the result of your command.  
 
-## Use
+You will get warnings from google that it doesn't recognize this software and it might be a virus. You can check the code in [main.py](src/__main__.py)to verify that it isn't then hit *continue anyway*.
+
+## Preview
 ![](github_media/example_GUI.png)
 | _What version 0.0.1 looks like_
 ###

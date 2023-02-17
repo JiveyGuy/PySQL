@@ -19,18 +19,17 @@
 
 # ==== standard imports
 import csv
-import requests
 import sqlite3
-import platform
 import os
 import glob
+import webbrowser
 import pandas as pd
 import customtkinter as ctk
-import webbrowser
-import tkinter as tk
+import idlelib.colorizer as ic
+import idlelib.percolator as ip
+import re
 from tkinter import filedialog as file_diag
 from tkinter import messagebox as msg_bx
-from PIL import ImageTk, Image
 
 
 
@@ -39,7 +38,7 @@ DEBUG = True
 DEFAULT_OUT_PATH = "output.csv"
 
 # Default sql query in the box
-DEFAULT_CMD =  """ /* Example SQL Command */ 
+DEFAULT_CMD =  """ -- Example SQL Command
 SELECT TREE.INVYR, TREE.TREE, PLOT.PLOT, TREE.SUBP, TREE.DIA, PLOT.LAT, PLOT.LON
 FROM TREE
 INNER JOIN PLOT ON TREE.PLT_CN=PLOT.CN """
@@ -205,7 +204,14 @@ class App(ctk.CTk):
 		# create main text box
 		self.sql_command_box = ctk.CTkTextbox(self,
 			height = 400,
-			corner_radius = 20)
+			padx = 30,
+			pady = 30, 
+			corner_radius = 20,
+			wrap='none'
+			) 
+			
+			# ,
+			# corner_radius = 20
 		self.sql_command_box.grid(row=1,
 			rowspan=2,
 			column=1,
@@ -213,7 +219,63 @@ class App(ctk.CTk):
 			padx=(10, 10),
 			pady=(2, 2),
 			sticky="nsew")
-		self.sql_command_box.insert("1.0", DEFAULT_CMD, tags=None)
+		
+		self.sql_command_box.insert("1.0", DEFAULT_CMD)
+
+
+		# syntax highlighting
+		self.colorize("idkl", start=True)
+		self.sql_command_box.bind("<KeyRelease>", self.colorize)
+	
+	def colorize(self, event, start=False):
+		if(not start):
+			self.color_percol.close()
+		IDPROG = r"\s+(\w+)"
+
+		KEYWORD   = r"\b(?P<KEYWORD>ADD|ADD|ALL|ALTER|ALTER|ALTER|AND|ANY|AS|ASC|BACKUP|BETWEEN|CASE|CHECK|COLUMN|CONSTRAINT|CREATE|CREATE|CREATE|CREATE|CREATE|CREATE|CREATE|CREATE|DATABASE|DEFAULT|DELETE|DESC|DISTINCT|DROP|DROP|DROP|DROP|DROP|DROP|DROP|DROP|EXEC|EXISTS|FOREIGN|FROM|FULL|GROUP|HAVING|IN|INDEX|INNER|INSERT|INSERT|IS|IS|JOIN|LEFT|LIKE|LIMIT|NOT|NOT|OR|ORDER|OUTER|PRIMARY|PROCEDURE|RIGHT|ROWNUM|SELECT|SELECT|SELECT|SELECT|SET|TABLE|TOP|TRUNCATE|UNION|UNION|UNIQUE|UPDATE|VALUES|VIEW|WHERE)\b"
+		DOCSTRING = r"(?P<DOCSTRING>(?i:r|u|f|fr|rf|b|br|rb)?'''[^'\\]*((\\.|'(?!''))[^'\\]*)*(''')?|(?i:r|u|f|fr|rf|b|br|rb)?\"\"\"[^\"\\]*((\\.|\"(?!\"\"))[^\"\\]*)*(\"\"\")?)"
+		STRING    = r"(?P<STRING>(?i:r|u|f|fr|rf|b|br|rb)?'[^'\\\n]*(\\.[^'\\\n]*)*'?|(?i:r|u|f|fr|rf|b|br|rb)?\"[^\"\\\n]*(\\.[^\"\\\n]*)*\"?)"
+		TYPES     = r"\b(?P<TYPES>ON|FROM|=|INT|TINYINT|BIGINT|FLOAT|REAL|DATE|TIME|DATETIME|CHAR|VARCHAR|TEXT|NCHAR|NVARCHAR|NTEXT|BINARY|VARBINARY|CLOB|BLOB|XML|CURSOR|TABLE|int|tinyint|bigint|float|real|date|time|datetime|char|varchar|text|nchar|nvarchar|ntext|binary|varbinary|clob|blob|xml|cursor|table)\b"
+		NUMBER    = r"\b(?P<NUMBER>((0x|0b|0o|#)[\da-fA-F]+)|((\d*\.)?\d+))\b"
+		CLASSDEF = r"\b(?P<CLASSDEF>\w+)(?=\.)"
+		DECORATOR = r"(^[ \t]*(?P<DECORATOR>@[\w\d\.]+))"
+		INSTANCE  = r"\b(?P<INSTANCE>super|self|cls)\b"
+		COMMENT   = r"(?P<COMMENT>--[^\n]*)"
+		SYNC      = r"(?P<SYNC>\n)"
+
+		PROG   = rf"{KEYWORD}|{TYPES}|{COMMENT}|{DOCSTRING}|{STRING}|{SYNC}|{INSTANCE}|{DECORATOR}|{NUMBER}|{CLASSDEF}"
+
+		CHARBLUE	= "#6d78a8"
+		LEMON		= "#b8a712"
+		OVERCAST	= "#7877bf"
+		PUMPKIN		= "#bf8e77"
+		STORMY		= "#a077bf"
+		CLOUD2		= "#77babf"
+		SAILOR		= "#474dfc"
+		CLOUD		= "#c0c1cf"
+		DK_SEAFOAM	= "#7fa377"
+		PURPLE		= "#bd8290"
+
+		TAGDEFS   = {   'COMMENT'    : {'foreground': CHARBLUE  , 'background': None},
+                'TYPES'      : {'foreground': CLOUD2    , 'background': None},
+                'NUMBER'     : {'foreground': LEMON     , 'background': None},
+                'BUILTIN'    : {'foreground': OVERCAST  , 'background': None},
+                'STRING'     : {'foreground': PUMPKIN   , 'background': None},
+                'DOCSTRING'  : {'foreground': STORMY    , 'background': None},
+                'EXCEPTION'  : {'foreground': CLOUD2    , 'background': None},
+                'DEFINITION' : {'foreground': SAILOR    , 'background': None},
+                'DECORATOR'  : {'foreground': CLOUD2    , 'background': None},
+                'INSTANCE'   : {'foreground': CLOUD     , 'background': None},
+                'KEYWORD'    : {'foreground': DK_SEAFOAM, 'background': None},
+                'CLASSDEF'   : {'foreground': PURPLE    , 'background': None},
+            }
+
+		cd         = ic.ColorDelegator()
+		cd.prog    = re.compile(PROG, re.S|re.M)
+		cd.idprog  = re.compile(IDPROG, re.S)
+		cd.tagdefs = {**cd.tagdefs, **TAGDEFS}
+		self.color_percol = ip.Percolator(self.sql_command_box)
+		self.color_percol.insertfilter(cd)
 
 	def make_top_bar(self):
 		self.progressbar = ctk.CTkProgressBar(self,
@@ -291,36 +353,17 @@ class App(ctk.CTk):
 			sticky="nsew")
 		self.scrollable_frame.grid_columnconfigure(0, weight=1)
 
-	# one day
-	# def set_proc_name(self, newname):
-	#     from ctypes import cdll, byref, create_string_buffer
-	#     libc = cdll.LoadLibrary('libc.so.6')
-	#     buff = create_string_buffer(len(newname)+1)
-	#     buff.value = newname
-	#     libc.prctl(15, byref(buff), 0, 0, 0)
-
 	def configure_window(self):
 		# configure window
 		self.title("PySQL")
 		self.geometry(f"{1100}x{580}")
-		# self.set_proc_name("PySQL")
-		# ico_path = "./logo.png"
-		# ico_path2 = "src/logo.png"
-		
-		# try: 
-		# 	debug(f"ico_path = {ico_path}, current dir = {os.getcwd()}")
-		# 	img = ImageTk.PhotoImage(Image.open(ico_path))  # PIL solution
-		# except:
 
-		# 	tmp_path = os.path.join(os.path.dirname(__file__), f"{ico_path2}")
-		# 	debug(f"retry for dist: ico_path = {ico_path2}, current dir = {tmp_path}")
-		# 	img_tmp = open(tmp_path)
-		# 	img = ImageTk.PhotoImage(img_tmp)  # PIL solution
-		# self.tk.call('wm', 'iconphoto', self._w, img)
-
-		# configure grid layout (4x3) (rowxcol)
 		self.grid_columnconfigure(1, weight=1)
 		self.grid_rowconfigure((0, 1, 2), weight=1)
+	
+	def open_data_mart(self):
+		webbrowser.open(DATAMART_URL,
+			new=1)
 
 	# ==== util funcs 
 	def file_button_callback(self):

@@ -1,4 +1,3 @@
-rm dist
-mkdir dist
+rm ..\dist
 set /p cmd_txt=<nuitka_command.txt
 python %cmd_txt%
