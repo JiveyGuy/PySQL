@@ -97,14 +97,12 @@ def gen_output_prefix(entry_select):
 
 def do_sql( entry_select,
 	state_db_paths,
-	progress,
 	merge_sep,
 	cmd_str ):
 	debug("do_sql started")
 	output_prefix = gen_output_prefix(entry_select)
 
 	debug(f"output prefix = {output_prefix}")
-	progress.set(0)
 	try:
 		if merge_sep == False: #merge
 			# mkdir temp
@@ -420,7 +418,7 @@ class App(ctk.CTk):
 			debug(f"execute_button_callback do_sql({self.entry.get()})")
 			val_tmp = self.merge_sw.get()
 			debug(f"self.merge_sw.get() return {val_tmp}")
-			state = do_sql(self.entry.get(), current_file_paths, self.progressbar, val_tmp=="seperate", cmd_str)
+			state = do_sql(self.entry.get(), current_file_paths, val_tmp=="seperate", cmd_str)
 			# todo error handling
 			if state == 0 :
 				self.progressbar.configure(progress_color="green")
