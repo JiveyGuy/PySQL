@@ -19,6 +19,7 @@
 
 # ==== standard imports
 import csv
+import shutil
 import sqlite3
 import os
 import glob
@@ -59,7 +60,7 @@ def working_dir():
 	return os.getcwd()
 
 def default_output():
-	path = os.getcwd()+"/./output/"
+	path = os.getcwd()+"\\output\\"
 	if not os.path.exists(path):
 		debug("output not defined making dir")
 		os.makedirs(path)
@@ -107,33 +108,45 @@ def do_sql( entry_select,
 	try:
 		if merge_sep == False: #merge
 			# mkdir temp
-			output_prefix += "/temp"
+			output_prefix += "temp\\"
+			try:
+				os.rmdir(output_prefix)
+			except:
+				shutil.rmtree(output_prefix)
 			os.mkdir(output_prefix)
 			debug("made temp dir")
 
 			# for each file
 			for state_db_path in state_db_paths:
-				debug("do_sql now on state_db_path ")
-				output_file_prefix = default_output()+get_file_name(state_db_path).rsplit('.',1)[0]+".csv"
+				debug(f"do_sql now on {state_db_path} ")
+				output_file_prefix = output_prefix+get_file_name(state_db_path).rsplit('.',1)[0]+".csv"
 				debug(f"do_sql({state_db_path}) outputting to {output_file_prefix}")
 				(cursor, conn) = load_cursor(state_db_path)
 				debug(f"load_cursor returned {(cursor, conn)}")
 				cursor.execute(cmd_str)
-				with open(output_file, 'w', newline='') as csv_file:
+				with open(output_file_prefix, 'w', newline='') as csv_file:
 					csv_writer = csv.writer(csv_file)
 					csv_writer.writerow([i[0] for i in cursor.description])
 					csv_writer.writerows(cursor)
 				conn.close()
-				debug("execute done")
+				debug("execute x done")
 
 			# merge .csvs
 			extension = 'csv'
-			all_filenames = [i for i in glob.glob('output_prefix/*.{}'.format(extension))]
+
+			all_filenames = os.listdir(output_prefix)
 			debug(f"all file names = {all_filenames}")
-			combined_csv = pd.concat([pd.read_csv(f) for f in all_filenames ])
+			try:
+				debug(f"reading from {output_prefix}{all_filenames[0]}")
+			except:
+				pass
+			combined_csv = pd.concat([pd.read_csv(f"{output_prefix}{file_name}") for file_name in all_filenames ])
 			combined_csv.to_csv( "combined_csv.csv", index=False, encoding='utf-8-sig')
 
-			os.rmdir("./temp/")
+			try:
+				os.rmdir(output_prefix)
+			except:
+				shutil.rmtree(output_prefix)
 
 		else: #seperate
 			for state_db_path in state_db_paths:
@@ -179,14 +192,15 @@ class App(ctk.CTk):
 
 	def make_bottom_bar(self):
 		# create output selector 
-		self.entry = ctk.CTkEntry(self,
-			placeholder_text=DEFAULT_OUTPUT_DIR)
+		self.entry = ctk.CTkEntry(self)
 		self.entry.grid(row=3,
 			column=1,
 			columnspan=1,
 			padx=(10, 10),
 			pady=(2, 2),
 			sticky="nsew")
+		self.entry.insert(0,f"{DEFAULT_OUTPUT_DIR}")
+
 
 		self.exe_button = ctk.CTkButton(master=self,
 			fg_color="transparent",
@@ -403,10 +417,10 @@ class App(ctk.CTk):
 		try:
 			cmd_str = self.sql_command_box.get("1.0","end")
 			debug(f"sql_cmd = {cmd_str}")
-			debug(f"execute_button_callback do_sql({current_file_paths})")
+			debug(f"execute_button_callback do_sql({self.entry.get()})")
 			val_tmp = self.merge_sw.get()
 			debug(f"self.merge_sw.get() return {val_tmp}")
-			state = do_sql(val_tmp, current_file_paths, self.progressbar, val_tmp=="seperate", cmd_str)
+			state = do_sql(self.entry.get(), current_file_paths, self.progressbar, val_tmp=="seperate", cmd_str)
 			# todo error handling
 			if state == 0 :
 				self.progressbar.configure(progress_color="green")
