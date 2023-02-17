@@ -9,7 +9,7 @@
 A python program made with CustomTkInter for the USDA-FIA so that state.db files can have sql commands ran on them. 
 
 # Use
-Download from [here](release/PySQL.exe) and run the file. Once you export a folder will appear called "output" with the result of your command.  
+Download from [here](release/PySQL.zip) (password: pysql) and run the file. Once you export a folder will appear called "output" with the result of your command.  
 
 You will get warnings from google that it doesn't recognize this software and it might be a virus. You can check the code in [main.py](src/__main__.py)to verify that it isn't then hit *continue anyway*.
 
